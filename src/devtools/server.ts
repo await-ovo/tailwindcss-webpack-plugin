@@ -1,20 +1,13 @@
 import http from 'http';
-import { utimesSync } from 'fs';
 import { getPort } from 'get-port-please';
 import createServer from 'tailwind-config-viewer/server';
+import { parseRequestBody, promiseSingleton, debug } from '../util';
 import {
   DEFAULT_DEVTOOLS_HOST,
   DEFAULT_DEVTOOLS_PORT,
   DEVTOOLS_POST_PATH,
-} from 'src/constants';
-import {
-  ensureAbsolute,
-  parseRequestBody,
-  promiseSingleton,
-  debug,
-  ensureTrailingSlash,
-} from 'src/util';
-import type { UserOptions, Compiler } from 'src/types';
+} from '../constants';
+import type { UserOptions, Compiler } from '../types';
 
 export class DevtoolsServer {
   host: string;
@@ -67,6 +60,11 @@ export class DevtoolsServer {
       }
     });
 
+    this.server.on('error', err => {
+      debug(`[devtools-server]: listen err`, err);
+      throw err;
+    });
+
     this.service = compiler.$tailwind;
 
     this._listen = false;
@@ -83,6 +81,11 @@ export class DevtoolsServer {
           this.server.listen(this.port, this.host, () => {
             this._listen = true;
             debug(`[devtools-server]: listen at ${this.host}:${this.port}`);
+
+            process.on('exit', () => {
+              this.close();
+            });
+
             resolve({
               port: this.port,
               host: this.host,
@@ -93,15 +96,17 @@ export class DevtoolsServer {
   );
 
   async ensureStart() {
+    debug(`[devtools-server]: ensure start server`);
     return this._ensureStart();
   }
 
-  close(callback: (err?: Error) => void) {
+  // eslint-disable-next-line no-unused-vars
+  close(callback?: (err?: Error) => void) {
     if (this._listen) {
       debug(`[devtools-server]: close`);
-      this.server.close(err => callback(err));
+      this.server.close(err => callback?.(err));
     } else {
-      callback();
+      callback?.();
     }
   }
 }

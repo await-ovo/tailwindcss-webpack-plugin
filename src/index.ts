@@ -1,12 +1,5 @@
-import { statSync, Stats } from 'fs';
 import { EntryPlugin } from 'webpack';
-import {
-  ensureAbsolute,
-  ensureService,
-  isString,
-  debug,
-  shallowDiff,
-} from './util';
+import { ensureAbsolute, ensureService, isString, debug } from './util';
 import {
   COMPILE_ENTRY_PATH,
   CSS_LOADER_PATH,
@@ -18,8 +11,6 @@ import {
   TAILWIND_ENTRY_VIRTUAL_ID,
 } from './constants';
 import type { UserOptions, Compiler } from './types';
-
-let tailwindEntryFsStat: Stats | undefined = undefined;
 
 export class TailwindCSSWebpackPlugin {
   options;
@@ -36,10 +27,6 @@ export class TailwindCSSWebpackPlugin {
       ),
       ...compiler.options.resolve.alias,
     };
-
-    tailwindEntryFsStat = statSync(
-      ensureAbsolute(this.options?.entry ?? TAILWIND_ENTRY_PATH),
-    );
 
     compiler.options.module.rules.unshift({
       enforce: 'pre',

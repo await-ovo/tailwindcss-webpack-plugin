@@ -1,7 +1,6 @@
 import { readFileSync } from 'fs';
-import { isDev, isWebTarget } from 'src/util';
-import { DEVTOOLS_POST_PATH } from 'src/constants';
-import { debug } from '../util';
+import { isDev, isWebTarget, debug } from '../util';
+import { DEVTOOLS_POST_PATH } from '../constants';
 import type webpack from 'webpack';
 import type { Compiler } from '../types';
 
@@ -18,7 +17,7 @@ export default async function devtoolsLoader(
     return;
   }
 
-  this.cacheable(true);
+  this.cacheable(false);
 
   if (isWebTarget(this._compiler.options.target) && isDev()) {
     await (this._compiler as Compiler).$tailwind.service.ensureInit();

@@ -1,9 +1,8 @@
 import { extname } from 'path';
-import { readFileSync, writeFileSync } from 'fs';
-import { DEFAULT_TAILWIND_CONFIG_FILE } from 'src/constants';
-import { isDev, debug } from 'src/util';
+import { readFileSync } from 'fs';
+import { isDev, debug } from '../util';
 import type webpack from 'webpack';
-import type { Compiler } from 'src/types';
+import type { Compiler } from '../types';
 
 export default async function CssLoader(
   this: webpack.LoaderContext<string>,

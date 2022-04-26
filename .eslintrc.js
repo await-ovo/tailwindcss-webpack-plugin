@@ -26,6 +26,8 @@ module.exports = {
     'array-bracket-spacing': ['error', 'never'],
     '@typescript-eslint/naming-convention': 'off',
     '@typescript-eslint/semi': 'error',
+    'no-unused-vars': 'off',
+    '@typescript-eslint/no-unused-vars': ['error'],
     quotes: [
       'error',
       'single',
@@ -61,6 +63,7 @@ module.exports = {
       },
     ],
     'import/first': 'error',
+    'import/no-duplicates': 'error',
     'no-console': 'error',
     'filenames/match-exported': ['error', ['kebab', 'camel', 'pascal']],
   },

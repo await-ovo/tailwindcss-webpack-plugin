@@ -1,4 +1,3 @@
-const { default: plugin } = require('tailwindcss/plugin');
 const { TailwindCSSWebpackPlugin } = require('../../');
 
 module.exports = {

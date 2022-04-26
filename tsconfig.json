@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "jsx": "react",
     "baseUrl": ".",
     "module": "ESNext",
     "target": "es2017",
@@ -12,5 +13,5 @@
     "skipLibCheck": true
   },
   "exclude": ["**/dist/**", "**/node_modules/**"],
-  "include": ["./src"]
+  "include": ["./src", "./test"]
 }

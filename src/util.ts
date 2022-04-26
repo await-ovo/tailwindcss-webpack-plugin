@@ -1,5 +1,5 @@
 import { resolve, extname, isAbsolute } from 'path';
-import { existsSync, readFileSync, utimesSync, statSync } from 'fs';
+import { existsSync, readFileSync, utimesSync } from 'fs';
 import createDebugger from 'debug';
 import tailwind from 'tailwindcss/lib/processTailwindFeatures';
 import getModuleDependencies from 'tailwindcss/lib/lib/getModuleDependencies';
@@ -12,7 +12,6 @@ import {
   DEFAULT_TAILWIND_ENTRY_CONTENT,
   PLUGIN_NAME,
   TAILWIND_ENTRY_PATH,
-  TAILWIND_ENTRY_VIRTUAL_ID,
 } from './constants';
 import type { PluginCreator } from 'postcss';
 import type { IncomingMessage } from 'http';
@@ -64,8 +63,9 @@ export const isObject = (v: unknown): v is object =>
 
 export const loadConfiguration = (
   options: UserOptions,
+  root: string = process.cwd(),
 ): { config: TailwindConfig; dependencies?: Set<string> } => {
-  let configPath = resolve(process.cwd(), DEFAULT_TAILWIND_CONFIG_FILE);
+  let configPath = resolve(root, DEFAULT_TAILWIND_CONFIG_FILE);
 
   let dependencies: Set<string> | undefined = undefined;
 
@@ -118,10 +118,7 @@ export const getChangedContent = (config: TailwindConfig): ChangedContent => {
   return changedContent;
 };
 
-export const createService = (
-  compiler: Compiler,
-  options: UserOptions,
-): Service => {
+export const createService = (options: UserOptions): Service => {
   let context: any = null;
 
   let configDependencies = new Set<string>();
@@ -254,7 +251,7 @@ export const ensureService = async (
   compiler.$tailwind = {
     dirty: new Set<string>(),
     server: new DevtoolsServer(options, compiler),
-    service: createService(compiler, options),
+    service: createService(options),
   };
 };
 
@@ -278,17 +275,3 @@ export const ensureAbsolute = (file: string, root: string = process.cwd()) =>
 
 export const ensureTrailingSlash = (s?: string) =>
   isString(s) ? (s.endsWith('/') ? s.replace(/\/*$/, '/') : `${s}/`) : s;
-
-export const shallowDiff = (
-  a: Record<string, unknown>,
-  b: Record<string, unknown>,
-): string[] => {
-  const diffA = Object.keys(a).filter(
-    key => (a[key] as any).toString() !== (b[key] as any).toString(),
-  );
-  const diffB = Object.keys(b).filter(
-    key => (a[key] as any).toString() !== (b[key] as any).toString(),
-  );
-
-  return Array.from(new Set([...diffA, ...diffB]));
-};
