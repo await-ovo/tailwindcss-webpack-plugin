@@ -3,3 +3,4 @@ dist
 *.css
 *.html
 *.yaml
+examples/vue/
