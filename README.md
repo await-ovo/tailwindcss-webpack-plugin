@@ -50,7 +50,7 @@ tailwind-css-webpack-plugin example - Click to Watch!"
 pnpm add tailwindcss-webpack-plugin -D
 
 # Using yarn
-yarn add --dev tailwind-css
+yarn add --dev tailwindcss-webpack-plugin
 
 # Using npm
 npm install --save-dev tailwindcss-webpack-plugin
