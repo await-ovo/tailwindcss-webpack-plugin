@@ -1,11 +1,11 @@
 {
   "name": "tailwindcss-webpack-plugin",
-  "version": "0.0.2",
+  "version": "0.0.4",
   "description": "",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "files": [
-    "./dist"
+    "dist/*"
   ],
   "scripts": {
     "prepare": "husky install",

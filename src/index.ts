@@ -31,9 +31,8 @@ export class TailwindCSSWebpackPlugin {
     compiler.options.module.rules.unshift({
       enforce: 'pre',
       include: (resource: string) =>
-        (resource.includes(TAILWIND_ENTRY_VIRTUAL_ID) ||
-          /\.css$/.test(resource)) &&
-        !/node_modules/.test(resource),
+        resource.includes(TAILWIND_ENTRY_VIRTUAL_ID) ||
+        (/\.css$/.test(resource) && !/node_modules/.test(resource)),
       loader: CSS_LOADER_PATH,
     });
 

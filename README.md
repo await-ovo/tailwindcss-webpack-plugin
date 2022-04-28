@@ -19,7 +19,7 @@ Fortunately, this plugin can help us try out any tailwind utilities in DevTools,
 
 <p align="center">
 <a href="https://www.youtube.com/watch?v=fceKcPPMuJk">
-<img src="https://i9.ytimg.com/vi/fceKcPPMuJk/mq3.jpg?sqp=CPD_pZMG&rs=AOn4CLBI2HD6SHziam49d7tYsSDEeRSPdg">
+<img src="https://i.imgur.com/2hdNeTnl.png">
 </a>
 </p>
 <br/>
