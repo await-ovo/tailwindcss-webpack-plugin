@@ -85,6 +85,11 @@ export class TailwindCSSWebpackPlugin {
       await ensureService(compiler, this.options);
     });
 
+    compiler.hooks.compilation.tap(PLUGIN_NAME, async compilation => {
+      debug(`[compiler ${compiler.name ?? ''}] compilation hook`);
+      await ensureService(compilation.compiler as Compiler, this.options);
+    });
+
     compiler.hooks.shutdown.tapAsync(PLUGIN_NAME, callback => {
       debug(`[compiler ${compiler.name ?? ''}] shutdown hook`);
       compiler.$tailwind.server.close(callback);
