@@ -1,16 +1,22 @@
 import { EntryPlugin } from 'webpack';
-import { ensureAbsolute, ensureService, isString, debug } from './util';
+import {
+  ensureAbsolute,
+  isString,
+  debug,
+  DEV_TOOLS_VIRTUAL_ID,
+  TAILWIND_ENTRY_VIRTUAL_ID,
+} from 'tailwindcss-webpack-plugin-utils';
 import {
   COMPILE_ENTRY_PATH,
   CSS_LOADER_PATH,
   DEVTOOLS_ENTRY_PATH,
   DEVTOOLS_LOADER_PATH,
-  DEV_TOOLS_VIRTUAL_ID,
   PLUGIN_NAME,
   TAILWIND_ENTRY_PATH,
-  TAILWIND_ENTRY_VIRTUAL_ID,
 } from './constants';
-import type { UserOptions, Compiler } from './types';
+import { ensureService } from './util';
+import type { Compiler } from './types';
+import type { UserOptions } from 'tailwindcss-webpack-plugin-utils';
 
 export class TailwindCSSWebpackPlugin {
   options;

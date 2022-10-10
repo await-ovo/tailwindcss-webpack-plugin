@@ -2,12 +2,21 @@
   "version": "0.0.1",
   "name": "tailwindcss-vite-plugin",
   "license": "MIT",
-  "description": "Design in Devtools for Tailwind CSS in webpack",
+  "description": "Design in Devtools for Tailwind CSS in Vite",
+  "scripts": {
+    "build": "tsup",
+    "dev": "pnpm run build -- --watch"
+  },
   "peerDependencies": {
     "vite": "^3.1.7"
   },
-  "dependencies": {},
+  "dependencies": {
+    "tailwindcss": "^3.1.8",
+    "tailwindcss-webpack-plugin-utils": "workspace:*"
+  },
   "devDependencies": {
+    "tailwind-config-viewer": "^1.7.2",
+    "@types/tailwindcss": "^3.1.0",
     "tsup": "^5.12.9",
     "vite": "^3.1.7"
   }

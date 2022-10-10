@@ -1,6 +1,7 @@
 import { readFileSync } from 'fs';
-import { isDev, isWebTarget, debug } from '../util';
+import { isDev, debug } from 'tailwindcss-webpack-plugin-utils';
 import { DEVTOOLS_POST_PATH } from '../constants';
+import { isWebTarget } from '../util';
 import type webpack from 'webpack';
 import type { Compiler } from '../types';
 
