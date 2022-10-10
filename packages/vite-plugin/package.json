@@ -1,0 +1,14 @@
+{
+  "version": "0.0.1",
+  "name": "tailwindcss-vite-plugin",
+  "license": "MIT",
+  "description": "Design in Devtools for Tailwind CSS in webpack",
+  "peerDependencies": {
+    "vite": "^3.1.7"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "tsup": "^5.12.6",
+    "vite": "^3.1.7"
+  }
+}

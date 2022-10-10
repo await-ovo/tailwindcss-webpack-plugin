@@ -1,6 +1,9 @@
 {
-  "name": "tailwindcss-webpack-plugin",
-  "version": "0.0.7",
+  "name": "tailwindcss-webpack-plugin-monorepo",
+  "privite": true,
+  "engines": {
+    "node": ">=16.0.0"
+  },
   "description": "Design in Devtools for Tailwind CSS",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
@@ -9,46 +12,26 @@
   ],
   "scripts": {
     "prepare": "husky install",
-    "prepublish": "npm run build",
-    "build": "tsup",
-    "dev": " npm run build -- --watch",
+    "prepublish": "pnpm run build",
+    "build": "pnpm -r --filter='./packages/*' run build",
     "test": "vitest  --no-threads",
-    "lint:fix": "eslint ./src/* --ext js,jsx,ts,tsx --fix"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/await-ovo/tailwindcss-webpack-plugin.git"
+    "lint:fix": "eslint ./packages --ext js,jsx,ts,tsx --fix"
   },
   "keywords": [
     "Tailwind CSS",
     "tailwind",
-    "webpack"
+    "Design in Devtools",
+    "Webpack Plugin",
+    "Vite Plugin"
   ],
-  "author": {
-    "name": "await-ovo",
-    "email": "13152410380@163.com"
-  },
-  "bugs": {
-    "url": "https://github.com/await-ovo/tailwindcss-webpack-plugin/issues"
-  },
-  "license": "MIT",
-  "dependencies": {
-    "@types/normalize-path": "^3.0.0",
-    "debug": "^4.3.4",
-    "fast-glob": "^3.2.11",
-    "get-port-please": "^2.5.0",
-    "normalize-path": "^3.0.0",
-    "postcss": "^8.4.12",
-    "tailwind-config-viewer": "^1.6.3",
-    "tailwindcss": "^3.0.24"
-  },
-  "peerDependencies": {
-    "webpack": "^5.72.0"
+  "lint-staged": {
+    "*.js|jsx|ts|tsx": [
+      "pnpm run lint:fix"
+    ]
   },
   "devDependencies": {
-    "@types/debug": "^4.1.7",
+    "@types/node": "^18.8.3",
     "@types/supertest": "^2.0.12",
-    "@types/tailwindcss": "^3.0.10",
     "@typescript-eslint/eslint-plugin": "^5.20.0",
     "@typescript-eslint/parser": "^5.20.0",
     "eslint": "^8.13.0",
@@ -62,14 +45,7 @@
     "puppeteer": "^13.6.0",
     "supertest": "^6.2.3",
     "tree-kill": "^1.2.2",
-    "tsup": "^5.12.6",
     "typescript": "^4.6.3",
-    "vitest": "^0.9.4",
-    "webpack": "^5.72.0"
-  },
-  "lint-staged": {
-    "*.js|jsx|ts|tsx": [
-      "npm run lint:fix"
-    ]
+    "vitest": "^0.9.4"
   }
 }

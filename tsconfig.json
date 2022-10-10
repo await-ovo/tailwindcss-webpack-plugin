@@ -12,6 +12,5 @@
     "resolveJsonModule": true,
     "skipLibCheck": true
   },
-  "exclude": ["**/dist/**", "**/node_modules/**"],
-  "include": ["./src", "./test"]
+  "exclude": ["**/dist/**", "**/node_modules/**"]
 }
