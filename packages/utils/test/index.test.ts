@@ -4,15 +4,14 @@ import request from 'supertest';
 import { expect, test } from 'vitest';
 import {
   promiseSingleton,
-  isWebTarget,
   loadConfiguration,
   getChangedContent,
   parseRequestBody,
   ensureAbsolute,
   ensureTrailingSlash,
-  createService,
-} from '../packages/webpack-plugin/src/util';
-import type { TailwindConfig } from 'tailwindcss/tailwind-config';
+  BaseTailwindService,
+} from '../src/index';
+import type { Config as TailwindConfig } from 'tailwindcss';
 
 test(`should create singleton promise`, async () => {
   let executeCount = 0;
@@ -28,16 +27,6 @@ test(`should create singleton promise`, async () => {
   expect(await task()).toEqual(1);
   expect(await task()).toEqual(1);
   expect(await task()).toEqual(1);
-});
-
-test(`should distinguish webpack compile target properly`, () => {
-  expect(isWebTarget('web')).toBe(true);
-  expect(isWebTarget('electron-renderer')).toBe(true);
-  expect(isWebTarget(['last 2 versions'])).toBe(true);
-  expect(isWebTarget('node')).toBe(false);
-  expect(isWebTarget('node12.18')).toBe(false);
-  expect(isWebTarget('nwjs')).toBe(false);
-  expect(isWebTarget('node-webkit')).toBe(false);
 });
 
 test(`should load tailwind config from cwd correctly`, () => {
@@ -69,12 +58,14 @@ test(`should load tailwind config from specified path`, () => {
 test(`should return the given configuration directly`, () => {
   const { config } = loadConfiguration({
     config: {
+      content: [],
       name: 'c',
       theme: {},
     } as TailwindConfig,
   });
 
   expect(config).toEqual({
+    content: [],
     name: 'c',
     theme: {},
   });
@@ -136,7 +127,7 @@ test(`should get path with trailing slash`, () => {
 });
 
 test(`should init service successfully`, async () => {
-  const service = createService({
+  const service = new BaseTailwindService({
     config: resolve(__dirname, './fixtures/scan-contents/tailwind.config.js'),
   });
 

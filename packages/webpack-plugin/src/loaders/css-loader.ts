@@ -1,6 +1,6 @@
 import { extname } from 'path';
 import { readFileSync } from 'fs';
-import { isDev, debug } from '../util';
+import { isDev, debug } from 'tailwindcss-webpack-plugin-utils';
 import type webpack from 'webpack';
 import type { Compiler } from '../types';
 

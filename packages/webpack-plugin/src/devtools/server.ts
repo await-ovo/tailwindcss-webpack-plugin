@@ -1,13 +1,18 @@
 import http from 'http';
 import { getPort } from 'get-port-please';
 import createServer from 'tailwind-config-viewer/server';
-import { parseRequestBody, promiseSingleton, debug } from '../util';
+import {
+  parseRequestBody,
+  promiseSingleton,
+  debug,
+} from 'tailwindcss-webpack-plugin-utils';
 import {
   DEFAULT_DEVTOOLS_HOST,
   DEFAULT_DEVTOOLS_PORT,
   DEVTOOLS_POST_PATH,
 } from '../constants';
-import type { UserOptions, Compiler } from '../types';
+import type { Compiler } from '../types';
+import type { UserOptions } from 'tailwindcss-webpack-plugin-utils';
 
 export class DevtoolsServer {
   host: string;
