@@ -1,6 +1,6 @@
 import type { Result } from 'postcss';
 import type webpack from 'webpack';
-import type { TailwindConfig } from 'tailwindcss/tailwind-config';
+import type { Config as TailwindConfig } from 'tailwindcss';
 import type { DevtoolsServer } from '../devtools/server';
 
 export type ChangedContent = { content: string; extension: string }[];
