@@ -11,7 +11,7 @@ import {
   ensureAbsolute,
   ensureTrailingSlash,
   createService,
-} from '../src/util';
+} from '../packages/webpack-plugin/src/util';
 import type { TailwindConfig } from 'tailwindcss/tailwind-config';
 
 test(`should create singleton promise`, async () => {

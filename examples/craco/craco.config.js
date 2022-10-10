@@ -1,4 +1,4 @@
-const { TailwindCSSWebpackPlugin } = require('../../');
+const { TailwindCSSWebpackPlugin } = require('tailwindcss-webpack-plugin');
 
 module.exports = {
   webpack: {

@@ -1,0 +1,51 @@
+{
+  "version": "0.0.7",
+  "name": "tailwindcss-webpack-plugin",
+  "license": "MIT",
+  "description": "Design in Devtools for Tailwind CSS in webpack",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "files": [
+    "dist/*"
+  ],
+  "keywords": [
+    "Tailwind CSS",
+    "tailwind",
+    "Design in Devtools",
+    "Webpack Plugin"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/await-ovo/tailwindcss-webpack-plugin.git"
+  },
+  "bugs": {
+    "url": "https://github.com/await-ovo/tailwindcss-webpack-plugin/issues"
+  },
+  "author": {
+    "name": "await-ovo",
+    "email": "13152410380@163.com"
+  },
+  "scripts": {
+    "build": "tsup",
+    "dev": " npm run build -- --watch"
+  },
+  "dependencies": {
+    "@types/normalize-path": "^3.0.0",
+    "debug": "^4.3.4",
+    "fast-glob": "^3.2.11",
+    "get-port-please": "^2.5.0",
+    "normalize-path": "^3.0.0",
+    "postcss": "^8.4.12",
+    "tailwind-config-viewer": "^1.6.3",
+    "tailwindcss": "^3.0.24"
+  },
+  "peerDependencies": {
+    "webpack": "^5.72.0"
+  },
+  "devDependencies": {
+    "@types/debug": "^4.1.7",
+    "@types/tailwindcss": "^3.0.10",
+    "tsup": "^5.12.6",
+    "webpack": "^5.72.0"
+  }
+}
