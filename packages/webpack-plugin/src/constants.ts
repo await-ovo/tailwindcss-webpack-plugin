@@ -1,29 +1,33 @@
+import { dirname, join } from 'path';
+import { fileURLToPath } from 'url';
+
 export const PLUGIN_NAME = 'tailwindcss-webpack-plugin';
 export const DEFAULT_DEVTOOLS_PORT = 9999;
 export const DEFAULT_DEVTOOLS_HOST = '127.0.0.1';
-export const DEVTOOLS_POST_PATH = '/_tailwindcss_devtools_update';
 
-export const COMPILE_ENTRY_PATH = new URL(
+export const PACKAGE_DIR =
+  typeof __dirname !== 'undefined'
+    ? __dirname
+    : dirname(fileURLToPath(import.meta.url));
+
+export const COMPILE_ENTRY_PATH = join(
+  PACKAGE_DIR,
   './templates/_compile-entry_.js',
-  import.meta.url,
-).pathname;
+);
 
-export const TAILWIND_ENTRY_PATH = new URL(
+export const TAILWIND_ENTRY_PATH = join(
+  PACKAGE_DIR,
   './templates/_tailwind_.css',
-  import.meta.url,
-).pathname;
+);
 
-export const DEVTOOLS_ENTRY_PATH = new URL(
+export const DEVTOOLS_ENTRY_PATH = join(
+  PACKAGE_DIR,
   './templates/_tailwind-devtools_.js',
-  import.meta.url,
-).pathname;
+);
 
-export const DEVTOOLS_LOADER_PATH = new URL(
+export const DEVTOOLS_LOADER_PATH = join(
+  PACKAGE_DIR,
   './loaders/devtools-loader.js',
-  import.meta.url,
-).pathname;
+);
 
-export const CSS_LOADER_PATH = new URL(
-  './loaders/css-loader.js',
-  import.meta.url,
-).pathname;
+export const CSS_LOADER_PATH = join(PACKAGE_DIR, './loaders/css-loader.js');

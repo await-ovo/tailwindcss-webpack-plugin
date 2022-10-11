@@ -2,7 +2,6 @@ import { defineConfig } from 'tsup';
 
 const entry = [
   './src/index.ts',
-  './src/devtools/client.ts',
   './src/loaders/css-loader.ts',
   './src/loaders/devtools-loader.ts',
 ];

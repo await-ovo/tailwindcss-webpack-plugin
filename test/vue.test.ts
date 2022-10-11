@@ -5,7 +5,7 @@ import { killApp, runDev, sleep } from './test-util';
 import type { Browser, Page } from 'puppeteer';
 import type { ChildProcess } from 'child_process';
 
-describe('create-react-app should dev successfully', async () => {
+describe('@vue/cli should dev successfully', async () => {
   let browser: Browser;
   let page: Page;
   let app: ChildProcess;

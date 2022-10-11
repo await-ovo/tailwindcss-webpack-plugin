@@ -3,21 +3,52 @@
   "name": "tailwindcss-vite-plugin",
   "license": "MIT",
   "description": "Design in Devtools for Tailwind CSS in Vite",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "files": [
+    "dist/*"
+  ],
+  "keywords": [
+    "Tailwind CSS",
+    "tailwind",
+    "Design in Devtools",
+    "Vite Plugin"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/await-ovo/tailwindcss-webpack-plugin.git",
+    "directory": "packages/vite-plugin"
+  },
+  "bugs": {
+    "url": "https://github.com/await-ovo/tailwindcss-webpack-plugin/issues"
+  },
+  "author": {
+    "name": "await-ovo",
+    "email": "13152410380@163.com"
+  },
   "scripts": {
     "build": "tsup",
-    "dev": "pnpm run build -- --watch"
+    "dev": "pnpm run build --watch"
   },
   "peerDependencies": {
     "vite": "^3.1.7"
   },
   "dependencies": {
     "tailwindcss": "^3.1.8",
+    "postcss": "^8.4.17",
     "tailwindcss-webpack-plugin-utils": "workspace:*"
   },
   "devDependencies": {
-    "tailwind-config-viewer": "^1.7.2",
     "@types/tailwindcss": "^3.1.0",
-    "tsup": "^5.12.9",
+    "tsup": "^6.2.3",
     "vite": "^3.1.7"
   }
 }

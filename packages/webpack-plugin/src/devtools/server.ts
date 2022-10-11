@@ -1,16 +1,11 @@
 import http from 'http';
 import { getPort } from 'get-port-please';
-import createServer from 'tailwind-config-viewer/server';
 import {
-  parseRequestBody,
   promiseSingleton,
   debug,
+  createDevtoolsMiddleware,
 } from 'tailwindcss-webpack-plugin-utils';
-import {
-  DEFAULT_DEVTOOLS_HOST,
-  DEFAULT_DEVTOOLS_PORT,
-  DEVTOOLS_POST_PATH,
-} from '../constants';
+import { DEFAULT_DEVTOOLS_HOST, DEFAULT_DEVTOOLS_PORT } from '../constants';
 import type { Compiler } from '../types';
 import type { UserOptions } from 'tailwindcss-webpack-plugin-utils';
 
@@ -24,45 +19,13 @@ export class DevtoolsServer {
   constructor(options: UserOptions, compiler: Compiler) {
     this.host = options.devtools?.host ?? DEFAULT_DEVTOOLS_HOST;
     this.port = options.devtools?.port ?? DEFAULT_DEVTOOLS_PORT;
+
     this.server = http.createServer(async (req, res) => {
-      const { url, method } = req;
-      res.setHeader('Access-Control-Allow-Origin', '*');
-      res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-      res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-      if (url === DEVTOOLS_POST_PATH) {
-        if (method === 'POST') {
-          try {
-            const { type, data: changed } = await parseRequestBody(req);
+      const devtoolsMiddleware = createDevtoolsMiddleware(
+        compiler.$tailwind.service,
+      );
 
-            if (type === 'add-classes' && changed?.length) {
-              compiler.$tailwind.service.updateChangedContent([
-                {
-                  content: `<div class="${changed.join(' ')}"></div>`,
-                  extension: 'html',
-                },
-              ]);
-              compiler.$tailwind.service.invalidateCssModule();
-            }
-
-            res.statusCode = 200;
-            res.end();
-          } catch (err) {
-            debug('[devtools-server] error: ', err);
-            res.statusCode = 500;
-            res.end(`Internal Server Error ${err}`);
-          }
-        } else {
-          // CORS preflight request
-          res.statusCode = 200;
-          res.end();
-        }
-      } else {
-        const configViewerMiddleware = createServer({
-          tailwindConfigProvider: () =>
-            compiler.$tailwind.service.tailwindConfig,
-        }).asMiddleware();
-        configViewerMiddleware(req, res);
-      }
+      devtoolsMiddleware(req, res);
     });
 
     this.server.on('error', err => {
