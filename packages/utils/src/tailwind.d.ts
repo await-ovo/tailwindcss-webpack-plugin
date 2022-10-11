@@ -1,7 +1,5 @@
 declare module 'tailwindcss/lib/processTailwindFeatures';
 
-declare module 'tailwindcss/lib/lib/getModuleDependencies' {
-  function getModuleDependencies(file: string): Array<{file:string, requires:string[]}>;
+declare module 'tailwind-config-viewer/server';
 
-  export = getModuleDependencies;
-}
+declare module 'tailwindcss/lib/lib/getModuleDependencies';

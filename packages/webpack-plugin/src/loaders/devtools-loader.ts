@@ -1,11 +1,11 @@
-import { readFileSync } from 'fs';
-import { isDev, debug } from 'tailwindcss-webpack-plugin-utils';
-import { DEVTOOLS_POST_PATH } from '../constants';
+import {
+  isDev,
+  debug,
+  transformDevtoolsClient,
+} from 'tailwindcss-webpack-plugin-utils';
 import { isWebTarget } from '../util';
 import type webpack from 'webpack';
 import type { Compiler } from '../types';
-
-const DEVTOOLS_CLIENT_PATH = new URL('../devtools/client.js', import.meta.url);
 
 export default async function devtoolsLoader(
   this: webpack.LoaderContext<string>,
@@ -21,25 +21,18 @@ export default async function devtoolsLoader(
   this.cacheable(false);
 
   if (isWebTarget(this._compiler.options.target) && isDev()) {
-    await (this._compiler as Compiler).$tailwind.service.ensureInit();
-
     const { port, host } = await (
       this._compiler as Compiler
     ).$tailwind.server.ensureStart();
 
+    const client = await transformDevtoolsClient(
+      (this._compiler as Compiler).$tailwind.service,
+      `http://${host}:${port}`,
+    );
+
     debug(`[devtools-loader]: backend server started`);
 
-    const clientContent = readFileSync(DEVTOOLS_CLIENT_PATH, 'utf-8')
-      .replace('__POST_PATH__', `http://${host}:${port}${DEVTOOLS_POST_PATH}`)
-      .replace('__CONFIG_VIEWER_PATH__', `http://${host}:${port}`);
-
-    const completions = (
-      this._compiler as Compiler
-    ).$tailwind.service.getCompletions();
-
-    debug(`[devtools-loader]: completions generated`);
-
-    callback(null, `${clientContent}\n${completions}`);
+    callback(null, client);
   } else {
     // returns the empty string if it is not in dev environment or if the compile target is not web, e.g. SSR.
     callback(null, '');

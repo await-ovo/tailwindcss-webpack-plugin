@@ -5,6 +5,13 @@
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
   "files": [
     "dist/*"
   ],
@@ -15,17 +22,19 @@
   "dependencies": {
     "fast-glob": "^3.2.12",
     "normalize-path": "^3.0.0",
-    "debug": "^4.3.4",
-    "postcss": "^8.4.17"
+    "tailwind-config-viewer": "^1.7.2",
+    "debug": "^4.3.4"
   },
   "devDependencies": {
     "@types/normalize-path": "^3.0.0",
     "@types/debug": "^4.1.7",
     "@types/tailwindcss": "^3.1.0",
     "tsup": "^6.2.3",
-    "tailwindcss": "^3.1.8"
+    "tailwindcss": "^3.1.8",
+    "postcss": "^8.4.17"
   },
   "peerDependencies": {
-    "tailwindcss": "^3.1.8"
+    "tailwindcss": "^3.1.8",
+    "postcss": "^8.4.17"
   }
 }

@@ -1,19 +1,36 @@
 import { resolve, extname, isAbsolute } from 'path';
+import { createRequire } from 'module';
 import { existsSync, readFileSync } from 'fs';
 import createDebugger from 'debug';
-import tailwind from 'tailwindcss/lib/processTailwindFeatures';
-import getModuleDependencies from 'tailwindcss/lib/lib/getModuleDependencies';
-import resolveConfig from 'tailwindcss/resolveConfig';
+import resolveConfig from 'tailwindcss/resolveConfig.js';
 import normalizePath from 'normalize-path';
 import fastGlob from 'fast-glob';
 import {
   DEFAULT_TAILWIND_CONFIG_FILE,
   DEFAULT_TAILWIND_ENTRY_CONTENT,
+  DEVTOOLS_CLIENT_PATH,
+  DEVTOOLS_POST_PATH,
+  PACKAGE_DIR,
 } from './constants';
 import type { PluginCreator } from 'postcss';
-import type { IncomingMessage } from 'http';
+import type { IncomingMessage, ServerResponse } from 'http';
 import type { ChangedContent, UserOptions } from './types';
 import type { Config as TailwindConfig } from 'tailwindcss';
+
+// import cjs module.
+const require = createRequire(PACKAGE_DIR);
+
+const {
+  default: tailwind,
+} = require('tailwindcss/lib/processTailwindFeatures');
+
+const {
+  default: getModuleDependencies,
+}: {
+  default: (file: string) => Array<{ file: string; requires: string[] }>;
+} = require('tailwindcss/lib/lib/getModuleDependencies');
+
+const createServer = require('tailwind-config-viewer/server');
 
 export * from './constants';
 export * from './types';
@@ -31,7 +48,8 @@ export const promiseSingleton = <T>(fn: () => Promise<T>) => {
   };
 };
 
-export const isDev = () => process.env.NODE_ENV === 'development';
+export const isDev = (mode?: string) =>
+  (mode ?? process.env.NODE_ENV) === 'development';
 
 export const isString = (v: unknown): v is string => typeof v === 'string';
 
@@ -61,7 +79,7 @@ export const ensureTrailingSlash = (s?: string) =>
 
 // load tailwindcss configuration
 export const loadConfiguration = (
-  options: UserOptions,
+  options?: UserOptions,
   root: string = process.cwd(),
 ): { config: TailwindConfig; dependencies?: Set<string> } => {
   let configPath = resolve(root, DEFAULT_TAILWIND_CONFIG_FILE);
@@ -126,9 +144,9 @@ export class BaseTailwindService {
 
   changedContent: ChangedContent = [];
 
-  options: UserOptions;
+  options?: UserOptions;
 
-  constructor(options: UserOptions) {
+  constructor(options?: UserOptions) {
     this.options = options;
   }
 
@@ -193,7 +211,7 @@ export class BaseTailwindService {
     `;
   }
 
-  ensureInit = promiseSingleton(async () => {
+  _ensureInit = promiseSingleton(async () => {
     debug(`[service]: ensure init service`);
 
     const { config, dependencies } = loadConfiguration(this.options);
@@ -213,6 +231,10 @@ export class BaseTailwindService {
     }
   });
 
+  async ensureInit() {
+    await this._ensureInit();
+  }
+
   async refresh() {
     debug('[service]: refresh');
     this.configDependencies.clear();
@@ -231,7 +253,91 @@ export class BaseTailwindService {
     this.changedContent = getChangedContent(this._tailwindConfig);
   }
 
-  invalidateCssModule() {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  invalidateCssModule(_params?: unknown) {
     // empty
   }
 }
+
+export const createDevtoolsMiddleware = (
+  service: BaseTailwindService,
+  options: {
+    configViewerPath?: string;
+    server?: any;
+  } = {},
+) => {
+  const { configViewerPath, server } = options;
+
+  return async (req: IncomingMessage, res: ServerResponse) => {
+    const { url, method } = req;
+
+    debug(`[devtools-middleware] handle  request: ${url} - ${method}`);
+
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+    if (url === DEVTOOLS_POST_PATH) {
+      if (method === 'POST') {
+        try {
+          const { type, data: changed } = await parseRequestBody(req);
+
+          if (type === 'add-classes' && changed?.length) {
+            service.updateChangedContent([
+              {
+                content: `<div class="${changed.join(' ')}"></div>`,
+                extension: 'html',
+              },
+            ]);
+            service.invalidateCssModule(server);
+          }
+
+          res.statusCode = 200;
+          res.end();
+        } catch (err) {
+          debug('[devtools-middleware] error: ', err);
+          res.statusCode = 500;
+          res.end(`Internal Server Error ${err}`);
+        }
+      } else {
+        // CORS preflight request
+        res.statusCode = 200;
+        res.end();
+      }
+    } else {
+      debug(`[devtools-middleware] open config viewer`);
+
+      const configViewerMiddleware = createServer({
+        tailwindConfigProvider: () => service.tailwindConfig,
+        routerPrefix: configViewerPath ?? '',
+      }).asMiddleware();
+
+      // ensure that the static assets of the config-viewer are successfully resolved.
+      if (!req.url?.endsWith('/config.json')) {
+        req.url = req.url?.substring(configViewerPath?.length ?? 0);
+      }
+
+      configViewerMiddleware(req, res);
+    }
+  };
+};
+
+export const transformDevtoolsClient = async (
+  service: BaseTailwindService,
+  serverUrl: string,
+  configViewerPath?: string,
+) => {
+  await service.ensureInit();
+
+  debug(`[devtools-loader]: backend server started`);
+
+  const clientContent = readFileSync(DEVTOOLS_CLIENT_PATH, 'utf-8')
+    .replace('__POST_PATH__', `${serverUrl}${DEVTOOLS_POST_PATH}`)
+    .replace('__CONFIG_VIEWER_PATH__', `${serverUrl}${configViewerPath ?? ''}`);
+
+  const completions = service.getCompletions();
+
+  debug(`[devtools-loader]: completions generated`);
+
+  return `${clientContent}\n${completions}`;
+};

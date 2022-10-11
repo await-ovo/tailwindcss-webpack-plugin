@@ -3,7 +3,7 @@ import {
   ensureAbsolute,
   isString,
   debug,
-  DEV_TOOLS_VIRTUAL_ID,
+  DEVTOOLS_VIRTUAL_ID,
   TAILWIND_ENTRY_VIRTUAL_ID,
 } from 'tailwindcss-webpack-plugin-utils';
 import {
@@ -27,7 +27,7 @@ export class TailwindCSSWebpackPlugin {
 
   apply(compiler: Compiler) {
     compiler.options.resolve.alias = {
-      [DEV_TOOLS_VIRTUAL_ID]: DEVTOOLS_ENTRY_PATH,
+      [DEVTOOLS_VIRTUAL_ID]: DEVTOOLS_ENTRY_PATH,
       [TAILWIND_ENTRY_VIRTUAL_ID]: ensureAbsolute(
         this.options?.entry ?? TAILWIND_ENTRY_PATH,
       ),
@@ -44,7 +44,7 @@ export class TailwindCSSWebpackPlugin {
 
     compiler.options.module.rules.unshift({
       enforce: 'pre',
-      include: (resource: string) => resource.includes(DEV_TOOLS_VIRTUAL_ID),
+      include: (resource: string) => resource.includes(DEVTOOLS_VIRTUAL_ID),
       loader: DEVTOOLS_LOADER_PATH,
     });
 

@@ -43,23 +43,21 @@ export const isWebTarget = (target: Compiler['options']['target']) => {
   return isWeb;
 };
 
-class Service extends BaseTailwindService {
-  constructor(options: UserOptions) {
+export class Service extends BaseTailwindService {
+  constructor(options?: UserOptions) {
     super(options);
   }
 
   invalidateCssModule() {
     debug(
-      `invalidate virtual module ${this.options.entry ?? TAILWIND_ENTRY_PATH}`,
+      `invalidate virtual module ${this.options?.entry ?? TAILWIND_ENTRY_PATH}`,
     );
     // invalidate tailwind entry file.
-    const fullPath = ensureAbsolute(this.options.entry ?? TAILWIND_ENTRY_PATH);
+    const fullPath = ensureAbsolute(this.options?.entry ?? TAILWIND_ENTRY_PATH);
     const timestamp = Date.now();
     utimesSync(fullPath, timestamp, timestamp);
   }
 }
-
-export { Service };
 
 export const ensureService = async (
   compiler: Compiler,
