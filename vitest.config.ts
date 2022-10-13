@@ -4,5 +4,6 @@ export default defineConfig({
   test: {
     include: ['./**/*.{test,spec}.{js,jsx,ts,tsx}'],
     testTimeout: 100000,
+    hookTimeout: 100000,
   },
 });

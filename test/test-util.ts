@@ -29,7 +29,8 @@ export const runDev = ({
       if (
         message.includes('webpack compiled successfully') ||
         message.includes('compiled client and server successfully') ||
-        message.includes('Compiled successfully')
+        message.includes('Compiled successfully') ||
+        /ready\s+in\s+\d+\s+ms/.test(message)
       ) {
         if (!didResolve) {
           didResolve = true;

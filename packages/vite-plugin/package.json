@@ -1,5 +1,5 @@
 {
-  "version": "0.0.1",
+  "version": "0.0.3",
   "name": "tailwindcss-vite-plugin",
   "license": "MIT",
   "description": "Design in Devtools for Tailwind CSS in Vite",

@@ -30,15 +30,15 @@ describe('vite-react should dev successfully', async () => {
 
   test('should apply change class names', async () => {
     try {
-      await page.goto('http://localhost:6666');
+      await page.goto('http://localhost:5173');
 
       let backgroundColor = await page.$eval('.App', el => {
         return window.getComputedStyle(el).backgroundColor;
       });
 
-      expect(backgroundColor).toEqual('rgb(220 252 231)');
+      expect(backgroundColor).toEqual('rgb(252, 231, 243)');
 
-      await page.$eval('header', el => (el.className += ' bg-yellow-500'));
+      await page.$eval('.App', el => (el.className += ' bg-yellow-500'));
 
       await sleep();
 
@@ -46,7 +46,7 @@ describe('vite-react should dev successfully', async () => {
         return window.getComputedStyle(el).backgroundColor;
       });
 
-      expect(backgroundColor).toEqual('rgb(234 179 8)');
+      expect(backgroundColor).toEqual('rgb(234, 179, 8)');
     } catch (e) {
       // eslint-disable-next-line no-console
       console.error(e);
