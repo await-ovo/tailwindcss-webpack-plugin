@@ -46,6 +46,7 @@ export const TailwindCSSVitePlugin = (options?: UserOptions): Plugin => {
       const devtoolsMiddleware = createDevtoolsMiddleware(service, {
         configViewerPath: CONFIG_VIEWER_PATH,
         server,
+        userOptions: options,
       });
 
       server.middlewares.use(async (req, res, next) => {
@@ -190,7 +191,7 @@ export const TailwindCSSVitePlugin = (options?: UserOptions): Plugin => {
 
       if (!dirtyFiles.has(file)) {
         dirtyFiles.add(file);
-        service.invalidateCssModule(server);
+        service.invalidateCssModule({ server, options });
       }
     },
   };

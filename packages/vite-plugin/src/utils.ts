@@ -2,8 +2,9 @@ import {
   BaseTailwindService,
   TAILWIND_ENTRY_VIRTUAL_ID,
   debug,
+  ensureAbsolute,
 } from 'tailwindcss-webpack-plugin-utils';
-import { ViteDevServer } from 'vite';
+import { UpdatePayload, ViteDevServer } from 'vite';
 import type { UserOptions } from './types';
 
 export class Service extends BaseTailwindService {
@@ -20,26 +21,34 @@ export class Service extends BaseTailwindService {
     }
   }
 
-  invalidateCssModule(server: ViteDevServer) {
+  invalidateCssModule({
+    server,
+    options,
+  }: {
+    server: ViteDevServer;
+    options?: UserOptions;
+  }) {
     // empty
     const { moduleGraph, ws } = server;
 
-    const tailwindEntryModule = moduleGraph.getModuleById(
-      TAILWIND_ENTRY_VIRTUAL_ID,
-    );
+    const tailwindEntryModule = options?.entry
+      ? Array.from(
+          moduleGraph.getModulesByFile(ensureAbsolute(options.entry))!,
+        )[0]
+      : moduleGraph.getModuleById(TAILWIND_ENTRY_VIRTUAL_ID);
 
     const timestamp = +Date.now();
 
-    debug('invalidate css module: ', typeof moduleGraph);
+    debug('invalidate css module: ', tailwindEntryModule, options?.entry);
 
     if (tailwindEntryModule) {
       moduleGraph.invalidateModule(tailwindEntryModule);
 
-      const ownerPath = `${/@id/}${
-        tailwindEntryModule.id || tailwindEntryModule.file!
-      }`;
+      const ownerPath = options?.entry
+        ? tailwindEntryModule.url
+        : `/@id/${tailwindEntryModule.id || tailwindEntryModule.file!}`;
 
-      ws.send({
+      const update: UpdatePayload = {
         type: 'update',
         updates: [
           {
@@ -49,7 +58,11 @@ export class Service extends BaseTailwindService {
             type: 'js-update',
           },
         ],
-      });
+      };
+
+      debug(`hmr send update payload `, update);
+
+      ws.send(update);
     }
   }
 }

@@ -264,6 +264,7 @@ export const createDevtoolsMiddleware = (
   options: {
     configViewerPath?: string;
     server?: any;
+    userOptions?: UserOptions;
   } = {},
 ) => {
   const { configViewerPath, server } = options;
@@ -271,7 +272,7 @@ export const createDevtoolsMiddleware = (
   return async (req: IncomingMessage, res: ServerResponse) => {
     const { url, method } = req;
 
-    debug(`[devtools-middleware] handle  request: ${url} - ${method}`);
+    debug(`[devtools-middleware] handle request: ${url} - ${method}`);
 
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
@@ -289,7 +290,10 @@ export const createDevtoolsMiddleware = (
                 extension: 'html',
               },
             ]);
-            service.invalidateCssModule(server);
+            service.invalidateCssModule({
+              server,
+              options: options?.userOptions,
+            });
           }
 
           res.statusCode = 200;

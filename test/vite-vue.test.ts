@@ -14,7 +14,7 @@ describe('vite-vue should dev successfully', async () => {
     app = (await runDev({
       bin: './node_modules/vite/bin/vite.js',
       command: 'serve',
-      cwd: resolve(process.cwd(), './examples/vite-react'),
+      cwd: resolve(process.cwd(), './examples/vite-vue'),
       port: 5174,
     })) as ChildProcess;
     browser = await puppeteer.launch({
@@ -41,9 +41,9 @@ describe('vite-vue should dev successfully', async () => {
         el => window.getComputedStyle(el).backgroundColor,
       );
 
-      expect(backgroundColor).toEqual('rgb(251 207 232)');
+      expect(backgroundColor).toEqual('rgb(251, 207, 232)');
 
-      expect(cardColor).toEqual('rgb(254 202 202)');
+      expect(cardColor).toEqual('rgb(254, 202, 202)');
 
       await page.$eval('#app', el => (el.className += ' bg-yellow-500'));
 
@@ -53,7 +53,7 @@ describe('vite-vue should dev successfully', async () => {
         return window.getComputedStyle(el).backgroundColor;
       });
 
-      expect(backgroundColor).toEqual('rgb(234 179 8)');
+      expect(backgroundColor).toEqual('rgb(234, 179, 8)');
     } catch (e) {
       // eslint-disable-next-line no-console
       console.error(e);
