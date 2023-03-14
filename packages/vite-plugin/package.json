@@ -1,5 +1,5 @@
 {
-  "version": "0.0.3",
+  "version": "0.0.5",
   "name": "tailwindcss-vite-plugin",
   "license": "MIT",
   "description": "Design in Devtools for Tailwind CSS in Vite",
@@ -39,7 +39,7 @@
     "dev": "pnpm run build --watch"
   },
   "peerDependencies": {
-    "vite": "^3.1.7"
+    "vite": "^3 || ^4"
   },
   "dependencies": {
     "tailwindcss": "^3.1.8",
@@ -49,6 +49,6 @@
   "devDependencies": {
     "@types/tailwindcss": "^3.1.0",
     "tsup": "^6.2.3",
-    "vite": "^3.1.7"
+    "vite": "^4"
   }
 }

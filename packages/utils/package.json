@@ -1,6 +1,6 @@
 {
   "name": "tailwindcss-webpack-plugin-utils",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "common utils for tailwindcss-webpack-plugin and tailwindcss-vite-plugin",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
