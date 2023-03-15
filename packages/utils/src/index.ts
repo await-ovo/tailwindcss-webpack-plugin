@@ -6,7 +6,7 @@ import resolveConfig from 'tailwindcss/resolveConfig.js';
 import normalizePath from 'normalize-path';
 import fastGlob from 'fast-glob';
 import {
-  DEFAULT_TAILWIND_CONFIG_FILE,
+  DEFAULT_TAILWIND_CONFIG_FILES,
   DEFAULT_TAILWIND_ENTRY_CONTENT,
   DEVTOOLS_CLIENT_PATH,
   DEVTOOLS_POST_PATH,
@@ -81,8 +81,14 @@ export const ensureTrailingSlash = (s?: string) =>
 export const loadConfiguration = (
   options?: UserOptions,
   root: string = process.cwd(),
-): { config: TailwindConfig; dependencies?: Set<string> } => {
-  let configPath = resolve(root, DEFAULT_TAILWIND_CONFIG_FILE);
+): {
+  config: TailwindConfig;
+  dependencies?: Set<string>;
+  configPath?: string;
+} => {
+  let configPath = DEFAULT_TAILWIND_CONFIG_FILES.map(filename =>
+    resolve(root, filename),
+  ).find(filepath => existsSync(filepath));
 
   let dependencies: Set<string> | undefined = undefined;
 
@@ -94,9 +100,11 @@ export const loadConfiguration = (
     }
   }
 
-  let config = resolveConfig(existsSync(configPath) ? require(configPath) : {});
+  let config = resolveConfig(
+    configPath && existsSync(configPath) ? require(configPath) : {},
+  );
 
-  if (existsSync(configPath)) {
+  if (configPath && existsSync(configPath)) {
     const deps = getModuleDependencies(configPath).map(({ file }) => file);
     dependencies = new Set(deps);
   }
@@ -104,6 +112,7 @@ export const loadConfiguration = (
   return {
     config,
     dependencies,
+    configPath,
   };
 };
 
@@ -140,6 +149,8 @@ export class BaseTailwindService {
 
   _tailwindConfig: TailwindConfig | null = null;
 
+  _configPath?: string;
+
   configDependencies = new Set<string>();
 
   changedContent: ChangedContent = [];
@@ -156,6 +167,10 @@ export class BaseTailwindService {
 
   get tailwindConfig() {
     return this._tailwindConfig;
+  }
+
+  get configPath() {
+    return this._configPath;
   }
 
   async transformCSS(source: string) {
@@ -214,9 +229,12 @@ export class BaseTailwindService {
   _ensureInit = promiseSingleton(async () => {
     debug(`[service]: ensure init service`);
 
-    const { config, dependencies } = loadConfiguration(this.options);
+    const { config, dependencies, configPath } = loadConfiguration(
+      this.options,
+    );
 
     this._tailwindConfig = config;
+    this._configPath = configPath;
 
     if (dependencies?.size) {
       for (const dependency of dependencies) {
@@ -240,9 +258,12 @@ export class BaseTailwindService {
     this.configDependencies.clear();
     this.changedContent = [];
     this._tailwindConfig = null;
-    const { config, dependencies } = loadConfiguration(this.options);
+    const { config, dependencies, configPath } = loadConfiguration(
+      this.options,
+    );
 
     this._tailwindConfig = config;
+    this._configPath = configPath;
 
     if (dependencies?.size) {
       for (const dependency of dependencies) {

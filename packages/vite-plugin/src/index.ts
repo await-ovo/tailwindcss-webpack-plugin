@@ -1,5 +1,5 @@
 import { readFileSync } from 'fs';
-import { extname, join } from 'path';
+import { extname } from 'path';
 import {
   DEVTOOLS_POST_PATH,
   debug,
@@ -9,7 +9,6 @@ import {
   isDev,
   transformDevtoolsClient,
   isString,
-  DEFAULT_TAILWIND_CONFIG_FILE,
 } from 'tailwindcss-webpack-plugin-utils';
 import { createFilter, Plugin, ViteDevServer } from 'vite';
 import {
@@ -184,7 +183,7 @@ export const TailwindCSSVitePlugin = (options?: UserOptions): Plugin => {
     handleHotUpdate(ctx) {
       let { file } = ctx;
 
-      if (file === join(process.cwd(), DEFAULT_TAILWIND_CONFIG_FILE)) {
+      if (file === service.configPath) {
         debug(`tailwindcss config file changed.`);
         file = 'config-file';
       }
