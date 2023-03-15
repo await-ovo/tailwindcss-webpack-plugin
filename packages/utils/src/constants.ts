@@ -12,4 +12,7 @@ export const DEVTOOLS_CLIENT_PATH = join(PACKAGE_DIR, './client/devtools.js');
 
 export const TAILWIND_ENTRY_VIRTUAL_ID = '_tailwind_.css';
 export const DEFAULT_TAILWIND_ENTRY_CONTENT = `@tailwind base;\n@tailwind components;\n@tailwind utilities;`;
-export const DEFAULT_TAILWIND_CONFIG_FILE = 'tailwind.config.js';
+export const DEFAULT_TAILWIND_CONFIG_FILES = [
+  'tailwind.config.cjs',
+  'tailwind.config.js',
+];

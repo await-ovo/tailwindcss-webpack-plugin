@@ -128,7 +128,7 @@ test(`should get path with trailing slash`, () => {
 
 test(`should init service successfully`, async () => {
   const service = new BaseTailwindService({
-    config: resolve(__dirname, './fixtures/scan-contents/tailwind.config.js'),
+    config: resolve(__dirname, './fixtures/scan-contents/tailwind.config.cjs'),
   });
 
   await service.ensureInit();
