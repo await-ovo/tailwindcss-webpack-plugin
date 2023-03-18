@@ -73,7 +73,7 @@ When the type is `TailwindConfig`, no configuration file is read, but the incomi
 
 ```
 // webpack.config.js
-const { TailwindCSSWebpackPlugin } = require('tailwind-css-webpack-plugin');
+const { TailwindCSSWebpackPlugin } = require('tailwindcss-webpack-plugin');
 
 module.exports = {
   plugins: [
