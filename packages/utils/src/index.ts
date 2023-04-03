@@ -15,7 +15,7 @@ import {
 import type { PluginCreator } from 'postcss';
 import type { IncomingMessage, ServerResponse } from 'http';
 import type { ChangedContent, UserOptions } from './types';
-import type { Config as TailwindConfig } from 'tailwindcss';
+import type { Config, Config as TailwindConfig } from 'tailwindcss';
 
 // import cjs module.
 const require = createRequire(PACKAGE_DIR);
@@ -27,7 +27,7 @@ const {
 const {
   default: getModuleDependencies,
 }: {
-  default: (file: string) => Array<{ file: string; requires: string[] }>;
+  default: (file: string) => Set<string>;
 } = require('tailwindcss/lib/lib/getModuleDependencies');
 
 const createServer = require('tailwind-config-viewer/server');
@@ -100,13 +100,12 @@ export const loadConfiguration = (
     }
   }
 
-  let config = resolveConfig(
+  let config = resolveConfig<Config>(
     configPath && existsSync(configPath) ? require(configPath) : {},
-  );
+  ) as TailwindConfig;
 
   if (configPath && existsSync(configPath)) {
-    const deps = getModuleDependencies(configPath).map(({ file }) => file);
-    dependencies = new Set(deps);
+    dependencies = getModuleDependencies(configPath);
   }
 
   return {

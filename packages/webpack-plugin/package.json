@@ -41,7 +41,7 @@
   "dependencies": {
     "get-port-please": "^2.6.1",
     "postcss": "^8.4.17",
-    "tailwindcss": "^3.1.8",
+    "tailwindcss": "^3.3.1",
     "tailwindcss-webpack-plugin-utils": "workspace:*"
   },
   "peerDependencies": {
