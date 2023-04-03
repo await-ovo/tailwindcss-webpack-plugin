@@ -1,6 +1,6 @@
 {
   "name": "tailwindcss-webpack-plugin-utils",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "common utils for tailwindcss-webpack-plugin and tailwindcss-vite-plugin",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
@@ -16,6 +16,7 @@
     "dist/*"
   ],
   "scripts": {
+    "prepublishOnly": "pnpm run build",
     "build": "tsup",
     "dev": "pnpm run build -- --watch"
   },
