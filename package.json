@@ -12,7 +12,7 @@
   ],
   "scripts": {
     "prepare": "husky install",
-    "prepublish": "pnpm run build",
+    "release": "pnpm -r --filter='./packages/*' publish",
     "build": "pnpm -r --filter='./packages/*' run build",
     "test": "vitest run --no-threads -c ./vitest.config.ts",
     "lint:fix": "eslint ./packages --ext js,jsx,ts,tsx --fix"
